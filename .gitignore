@@ -1,24 +1,191 @@
-# Build artifacts
-build/
+# C++ Build artifacts
+# ===================
+
+# Compiled Object files
 *.o
-*.a
+*.obj
+*.ko
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
 *.so
 *.dylib
+*.dll
 
-# IDE
+# Compiled Static libraries
+*.a
+*.lib
+*.la
+*.lo
+
+# Executables
+*.exe
+*.out
+*.app
+*.x86_64
+*.hex
+test_dynamic_array
+test_stack
+test_*
+main
+
+# CMake
+# =====
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+build/
+Build/
+BUILD/
+out/
+
+# Build directories
+bin/
+obj/
+Debug/
+Release/
+x64/
+x86/
+.vs/
+
+# IDEs and Editors
+# ================
+
+# Visual Studio Code
 .vscode/
+*.code-workspace
+
+# Visual Studio
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vcxproj.filters
+*.vcxproj.user
+
+# CLion / JetBrains
 .idea/
+cmake-build-*/
+*.iml
+
+# Xcode
+*.xcodeproj
+*.xcworkspace
+
+# Eclipse
+.cproject
+.project
+.settings/
+
+# QtCreator
+*.pro.user
+*.pro.user.*
+
+# Vim / Neovim
 *.swp
 *.swo
 *~
+.*.sw?
+tags
+.tags
 
-# CMake
-CMakeCache.txt
-CMakeFiles/
-cmake_install.cmake
-compile_commands.json
+# Emacs
+*~
+\#*\#
+.\#*
 
-# Executables
-main
-*.exe
-*.out
+# OS Generated files
+# ==================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Backup files
+*.bak
+*.backup
+*.tmp
+*.temp
+
+# Core dumps
+core
+core.*
+*.core
+
+# Profiling and debugging
+*.gcda
+*.gcno
+*.gcov
+gmon.out
+*.dSYM/
+
+# Documentation
+# =============
+docs/html/
+docs/latex/
+*.pdf
+Doxyfile.bak
+
+# Dependencies
+# ============
+vendor/
+third_party/
+external/
+deps/
+
+# Package managers
+conan/
+vcpkg_installed/
+_conan/
+
+# Testing
+# =======
+Testing/
+test_results/
+*.gcda
+*.gcno
+coverage/
+*.coverage
+
+# Logs
+# ====
+*.log
+log/
+logs/
+
+# Temporary files
+# ===============
+tmp/
+temp/
+*.tmp
+
+# Archives
+# ========
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
