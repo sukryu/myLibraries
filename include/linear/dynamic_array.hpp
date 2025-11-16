@@ -5,7 +5,7 @@
  * @date 2025-11-15
  * @version 1.0.0
  * 
- * Copyright (c) 2025 Jinhyeok
+ * Copyright (c) 2025 Your Name
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,22 +29,22 @@
 #ifndef MYLIB_LINEAR_DYNAMIC_ARRAY_HPP
 #define MYLIB_LINEAR_DYNAMIC_ARRAY_HPP
 
-#include <cstddef>
-#include <stdexcept>
-#include <utility>
+#include <cstddef>      // for size_t
+#include <stdexcept>    // for std::out_of_range
+#include <utility>      // for std::move
 #include <initializer_list>
 
 namespace mylib {
 namespace linear {
 
 /**
- * @class DynamicArray 
- * @berif A dynamic array container that automatically grows as needed
+ * @class DynamicArray
+ * @brief A dynamic array container that automatically grows as needed
  * 
- * This class provides a dynamic array implementation similar to 
- * std::vector, with automatic memory management and capacity growth..
- *
- * @tparam T the type of elements stored in the array
+ * This class provides a dynamic array implementation similar to std::vector,
+ * with automatic memory management and capacity growth.
+ * 
+ * @tparam T The type of elements stored in the array
  */
 template <typename T>
 class DynamicArray {
@@ -58,193 +58,193 @@ public:
     using const_pointer = const T*;
 
     /**
-     * @berif Default constructor
+     * @brief Default constructor
      * Creates an empty dynamic array with initial capacity
      */
     DynamicArray();
 
     /**
-     * @berif Constructor with initial capacity
+     * @brief Constructor with initial capacity
      * @param initial_capacity Initial capacity to reserve
      */
     explicit DynamicArray(size_type initial_capacity);
 
     /**
-    * @berif Constructor with size and default value 
-    * @param count Number of elements
-    * @param value Value to initialize elements with 
-    */
+     * @brief Constructor with size and default value
+     * @param count Number of elements
+     * @param value Value to initialize elements with
+     */
     DynamicArray(size_type count, const T& value);
 
     /**
-    * @berif Initialize list constructor 
-    * @param init Initializer list
-    */
+     * @brief Initializer list constructor
+     * @param init Initializer list
+     */
     DynamicArray(std::initializer_list<T> init);
 
     /**
-    * @berif Copy constructor 
-    * @param other Array to copy from 
-    */
+     * @brief Copy constructor
+     * @param other Array to copy from
+     */
     DynamicArray(const DynamicArray& other);
 
     /**
-    * @berif Move constructor
-    * @param other Array move to from 
-    */
+     * @brief Move constructor
+     * @param other Array to move from
+     */
     DynamicArray(DynamicArray&& other) noexcept;
 
     /**
-    * @berif Destructor
-    */
+     * @brief Destructor
+     */
     ~DynamicArray();
 
     /**
-    * @berif Copy assignment operator
-    * @param other Array to copy from
-    * @return Reference to this array
-    */
+     * @brief Copy assignment operator
+     * @param other Array to copy from
+     * @return Reference to this array
+     */
     DynamicArray& operator=(const DynamicArray& other);
 
     /**
-    * @berif Move assignment operator
-    * @param other Array to move from
-    * @return Reference to this array
-    */
-    DynamicArray& operator=(const DynamicArray&& other);
+     * @brief Move assignment operator
+     * @param other Array to move from
+     * @return Reference to this array
+     */
+    DynamicArray& operator=(DynamicArray&& other) noexcept;
 
-    // Element Access
+    // Element access
     /**
-    * @berif Access element at index with bounds checking
-    * @param index Position of element
-    * @return Reference to elements
-    * @throws std::out_of_range if index is out of bounds
-    */
+     * @brief Access element at index with bounds checking
+     * @param index Position of element
+     * @return Reference to element
+     * @throws std::out_of_range if index is out of bounds
+     */
     reference at(size_type index);
-    const_pointer at(size_type index) const;
+    const_reference at(size_type index) const;
 
     /**
-    * @berif Access element at index without bounds checking
-    * @param index Position of element
-    * @return Reference of element 
-    */
+     * @brief Access element at index without bounds checking
+     * @param index Position of element
+     * @return Reference to element
+     */
     reference operator[](size_type index);
     const_reference operator[](size_type index) const;
 
     /**
-    * @berif Access the first element
-    * @return Reference to first element
-    */
+     * @brief Access the first element
+     * @return Reference to first element
+     */
     reference front();
     const_reference front() const;
 
     /**
-    * @berif Access the last element
-    * @return Reference to last element
-    */
+     * @brief Access the last element
+     * @return Reference to last element
+     */
     reference back();
     const_reference back() const;
 
     /**
-    * @berif Direct access to underlying array
-    * @return Pointer to underlying array
-    */
+     * @brief Direct access to underlying array
+     * @return Pointer to underlying array
+     */
     pointer data() noexcept;
     const_pointer data() const noexcept;
 
     // Capacity
     /**
-    * @berif Check if array is empty
-    * @return true if empty, false otherwise 
-    */
+     * @brief Check if array is empty
+     * @return true if empty, false otherwise
+     */
     bool empty() const noexcept;
 
     /**
-    * @berif Get number of elements
-    * @return Number of elements
-    */
+     * @brief Get number of elements
+     * @return Number of elements
+     */
     size_type size() const noexcept;
 
     /**
-    * @berif Get current capacity
-    * @return Currrent capacity
-    */
+     * @brief Get current capacity
+     * @return Current capacity
+     */
     size_type capacity() const noexcept;
 
     /**
-    * @berif Reverse capacity for at least new_capacity elements
-    * @param new_capacity Minimum capacity to reverse 
-    */
+     * @brief Reserve capacity for at least new_capacity elements
+     * @param new_capacity Minimum capacity to reserve
+     */
     void reserve(size_type new_capacity);
 
     /**
-    * @berif Reduce capacity to fit size
-    */
+     * @brief Reduce capacity to fit size
+     */
     void shrink_to_fit();
 
-    //Modifiers
+    // Modifiers
     /**
-    * @berif Clear all elements
-    */
+     * @brief Clear all elements
+     */
     void clear() noexcept;
 
     /**
-    * @berif Add element to end
-    * @param value Value to end
-    */
+     * @brief Add element to end
+     * @param value Value to add
+     */
     void push_back(const T& value);
 
     /**
-    * @berif Add element to end (move version)
-    * @param value Value to move
-    */
+     * @brief Add element to end (move version)
+     * @param value Value to move
+     */
     void push_back(T&& value);
 
     /**
-    * @berif Remove last element
-    */
+     * @brief Remove last element
+     */
     void pop_back();
 
     /**
-     * @berif Resize array to contain count elements
-     * @param Count new size
+     * @brief Resize array to contain count elements
+     * @param count New size
      */
     void resize(size_type count);
 
     /**
-    * @berif Resize array with default value
-    * @param count New size
-    * @param value Value for new element
-    */
+     * @brief Resize array with default value
+     * @param count New size
+     * @param value Value for new elements
+     */
     void resize(size_type count, const T& value);
 
     /**
-    * @berif Swap contents with another array
-    * @param other Array to swap with
-    */
+     * @brief Swap contents with another array
+     * @param other Array to swap with
+     */
     void swap(DynamicArray& other) noexcept;
 
 private:
-    pointer m_data; ///< Pointer to array m_data
-    size_type m_size; ///< Current number of elements
-    size_type m_capacity; ///< Current capacity
+    pointer m_data;           ///< Pointer to array data
+    size_type m_size;         ///< Current number of elements
+    size_type m_capacity;     ///< Current capacity
 
     static constexpr size_type DEFAULT_CAPACITY = 16;
     static constexpr double GROWTH_FACTOR = 2.0;
 
     /**
-    * @berif Grow capacity when needed
-    */
+     * @brief Grow capacity when needed
+     */
     void grow();
 
     /**
-    * @berif Reallocate with new capacity
-    * @param new_capacity New capacity
-    */
+     * @brief Reallocate with new capacity
+     * @param new_capacity New capacity
+     */
     void reallocate(size_type new_capacity);
-
 };
 
-} // end of linear
-} // end of mylib
+} // namespace linear
+} // namespace mylib
+
 #endif // MYLIB_LINEAR_DYNAMIC_ARRAY_HPP
