@@ -58,6 +58,12 @@ public:
     using const_pointer = const T*;
 
     /**
+     * @berif Default constructor
+     * Creates an empty dynamic array with initial capacity
+     */
+    DynamicArray();
+
+    /**
      * @berif Constructor with initial capacity
      * @param initial_capacity Initial capacity to reserve
      */
@@ -169,7 +175,7 @@ public:
     * @berif Reverse capacity for at least new_capacity elements
     * @param new_capacity Minimum capacity to reverse 
     */
-    void reverse(size_type new_capacity);
+    void reserve(size_type new_capacity);
 
     /**
     * @berif Reduce capacity to fit size
@@ -192,7 +198,7 @@ public:
     * @berif Add element to end (move version)
     * @param value Value to move
     */
-    void push_back(const T&& value);
+    void push_back(T&& value);
 
     /**
     * @berif Remove last element
