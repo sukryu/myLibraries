@@ -1,5 +1,6 @@
 set(TREE_TEST_SOURCES
     test_binary_search_tree
+    test_avl_tree
 )
 
 foreach(test_name ${TREE_TEST_SOURCES})
