@@ -13,6 +13,7 @@ include_directories(include)
 add_subdirectory(src/linear)
 add_subdirectory(src/tree)
 add_subdirectory(src/hash)
+add_subdirectory(src/graph)
 
 # Tests
 add_subdirectory(tests)
