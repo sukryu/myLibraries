@@ -28,9 +28,11 @@
 *.app
 *.x86_64
 *.hex
-test_dynamic_array
-test_stack
-test_*
+build/test_dynamic_array
+build/test_stack
+build/test_linked_list
+build/test_queue
+build/main
 main
 
 # CMake
