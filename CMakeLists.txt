@@ -13,26 +13,31 @@ include_directories(include)
 add_library(mylib STATIC
     src/linear/dynamic_array.cpp
     src/linear/stack.cpp
-    src/linear/linked_list.cpp)
+    src/linear/linked_list.cpp
+    src/linear/queue.cpp
+)
 
 # Test executor
 add_executable(test_dynamic_array
-    tests/test_dynamic_array.cpp
-)
+    tests/test_dynamic_array.cpp)
 add_executable(test_stack
     tests/test_stack.cpp)
 add_executable(test_linked_list
     tests/test_linked_list.cpp)
+add_executable(test_queue
+    tests/test_queue.cpp)
 
 target_link_libraries(test_dynamic_array mylib)
 target_link_libraries(test_stack mylib)
 target_link_libraries(test_linked_list mylib)
+target_link_libraries(test_queue mylib)
 
 # Enable tests
 enable_testing()
 add_test(NAME DynamicArrayTest COMMAND test_dynamic_array)
 add_test(NAME StackTest COMMAND test_stack)
 add_test(NAME LinkedListTest COMMAND test_linked_list)
+add_test(NAME QueueTest COMMAND test_queue)
 # 메인 실행 파일
 #add_executable(main src/main.cpp)
 
