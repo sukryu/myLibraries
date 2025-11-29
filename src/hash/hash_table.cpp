@@ -528,6 +528,7 @@ template class HashTable<std::string, double>;
 template class HashTable<std::string, std::string>;
 template class HashTable<long, long>;
 template class HashTable<long long, long long>;
-
+// [추가] 테스트 코드에서 사용하는 타입 추가
+template class HashTable<int, std::pair<int, int>>;
 } // namespace hash
 } // namespace mylib

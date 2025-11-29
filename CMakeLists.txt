@@ -12,6 +12,7 @@ include_directories(include)
 # Libraries
 add_subdirectory(src/linear)
 add_subdirectory(src/tree)
+add_subdirectory(src/hash)
 
 # Tests
 add_subdirectory(tests)
