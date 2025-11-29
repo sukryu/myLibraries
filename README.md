@@ -17,29 +17,43 @@ This project is a personal journey to deeply understand data structures and algo
 
 ```
 myLibraries/
-├── include/               # Header files
-│   └── linear/           # Linear data structures
-│       ├── dynamic_array.hpp
-│       ├── stack.hpp
-│       ├── linked_list.hpp
-│       ├── queue.hpp
-│       └── deque.hpp
-├── src/                  # Implementation files
-│   └── linear/
-│       ├── dynamic_array.cpp
-│       ├── stack.cpp
-│       ├── linked_list.cpp
-│       ├── queue.cpp
-│       └── deque.cpp
-├── tests/                # Comprehensive test suites
-│   ├── test_dynamic_array.cpp
-│   ├── test_stack.cpp
-│   ├── test_linked_list.cpp
-│   ├── test_queue.cpp
-│   └── test_deque.cpp
-├── build/                # Build artifacts (gitignored)
-├── CMakeLists.txt        # CMake build configuration
-└── README.md            # This file
+├── CMakeLists.txt
+├── include/
+│   ├── linear/
+│   │   ├── dynamic_array.hpp
+│   │   ├── stack.hpp
+│   │   ├── linked_list.hpp
+│   │   ├── queue.hpp
+│   │   └── deque.hpp
+│   └── tree/
+│       ├── binary_search_tree.hpp
+│       └── avl_tree.hpp
+├── src/
+│   ├── linear/
+│   │   ├── CMakeLists.txt
+│   │   ├── dynamic_array.cpp
+│   │   ├── stack.cpp
+│   │   ├── linked_list.cpp
+│   │   ├── queue.cpp
+│   │   └── deque.cpp
+│   └── tree/
+│       ├── CMakeLists.txt
+│       ├── binary_search_tree.cpp
+│       └── avl_tree.cpp
+├── tests/
+│   ├── CMakeLists.txt
+│   ├── linear/
+│   │   ├── CMakeLists.txt
+│   │   ├── test_dynamic_array.cpp
+│   │   ├── test_stack.cpp
+│   │   ├── test_linked_list.cpp
+│   │   ├── test_queue.cpp
+│   │   └── test_deque.cpp
+│   └── tree/
+│       ├── CMakeLists.txt
+│       ├── test_binary_search_tree.cpp
+│       └── test_avl_tree.cpp
+└── README.md
 ```
 
 ## ✅ Implemented Data Structures
@@ -49,10 +63,17 @@ myLibraries/
 | Data Structure | Description | Key Operations | Time Complexity |
 |---------------|-------------|----------------|-----------------|
 | **DynamicArray** | Auto-resizing array with capacity management | push_back, pop_back, operator[] | O(1) amortized |
-| **Stack** | LIFO (Last-In-First-Out) container | push, pop, top | O(1) |
+| **Stack** | LIFO container using DynamicArray | push, pop, top | O(1) |
 | **LinkedList** | Doubly linked list with bidirectional traversal | push_front/back, insert, erase | O(1) ends, O(n) middle |
-| **Queue** | FIFO (First-In-First-Out) container | push, pop, front | O(1) |
-| **Deque** | Double-ended queue supporting both ends | push_front/back, pop_front/back | O(1) |
+| **Queue** | FIFO container using LinkedList | push, pop, front | O(1) |
+| **Deque** | Double-ended queue using LinkedList | push_front/back, pop_front/back | O(1) |
+
+### Tree Data Structures
+
+| Data Structure | Description | Key Operations | Time Complexity |
+|---------------|-------------|----------------|-----------------|
+| **BinarySearchTree** | Ordered binary tree | insert, remove, find, traversals | O(log n) avg, O(n) worst |
+| **AVLTree** | Self-balancing BST | insert, remove, find, rotations | O(log n) guaranteed |
 
 ### Features
 
@@ -105,11 +126,13 @@ cmake --build .
 ctest
 
 # Or run individual tests
-./test_dynamic_array
-./test_stack
-./test_linked_list
-./test_queue
-./test_deque
+./tests/linear/test_dynamic_array
+./tests/linear/test_stack
+./tests/linear/test_linked_list
+./tests/linear/test_queue
+./tests/linear/test_deque
+./tests/tree/test_binary_search_tree
+./tests/tree/test_avl_tree
 ```
 
 ### Quick Example
@@ -117,9 +140,12 @@ ctest
 ```cpp
 #include "linear/stack.hpp"
 #include "linear/queue.hpp"
+#include "tree/avl_tree.hpp"
 #include <iostream>
+#include <vector>
 
 using namespace mylib::linear;
+using namespace mylib::tree;
 
 int main() {
     // Stack example (LIFO)
@@ -136,10 +162,19 @@ int main() {
     queue.push(3);
     std::cout << queue.front() << std::endl;  // 1
     
-    // DynamicArray example
-    DynamicArray<int> arr = {1, 2, 3, 4, 5};
-    arr.push_back(6);
-    std::cout << arr.size() << std::endl;  // 6
+    // AVL Tree example (self-balancing BST)
+    AVLTree<int> avl;
+    for (int i = 1; i <= 1000; ++i) {
+        avl.insert(i);  // Stays balanced!
+    }
+    std::cout << "Size: " << avl.size() << std::endl;    // 1000
+    std::cout << "Height: " << avl.height() << std::endl; // ~10 (not 1000!)
+    
+    // Inorder traversal (sorted output)
+    std::vector<int> sorted;
+    avl.inorder([&sorted](const int& val) {
+        sorted.push_back(val);
+    });
     
     return 0;
 }
@@ -147,30 +182,60 @@ int main() {
 
 ## 📊 Implementation Details
 
-### DynamicArray
+### Linear Data Structures
+
+#### DynamicArray
 - **Internal Storage**: Raw array with manual memory management
 - **Growth Strategy**: 2x capacity when full
 - **Memory**: Contiguous allocation for cache efficiency
 
-### Stack
+#### Stack
 - **Container Adapter**: Uses DynamicArray internally
 - **Operations**: All O(1) time complexity
 - **Use Cases**: Expression evaluation, undo/redo, backtracking
 
-### LinkedList
+#### LinkedList
 - **Structure**: Doubly linked nodes with prev/next pointers
 - **Optimization**: Bidirectional traversal from nearest end
 - **Memory**: Dynamic allocation per node
 
-### Queue
+#### Queue
 - **Container Adapter**: Uses LinkedList internally
 - **Operations**: O(1) enqueue and dequeue
 - **Use Cases**: BFS, task scheduling, buffering
 
-### Deque
+#### Deque
 - **Container Adapter**: Uses LinkedList internally
 - **Flexibility**: Combines Stack and Queue operations
 - **Use Cases**: Sliding window, palindrome checking
+
+### Tree Data Structures
+
+#### BinarySearchTree
+- **Property**: Left < Root < Right
+- **Traversals**: Inorder, Preorder, Postorder, Level-order
+- **Operations**: Insert, Remove (3 cases), Find, Min/Max
+- **Weakness**: Can become skewed (O(n) worst case)
+
+#### AVLTree
+- **Balance Factor**: |height(left) - height(right)| ≤ 1
+- **Rotations**: LL, RR, LR, RL
+- **Guarantee**: O(log n) for all operations
+- **Height**: Always ≤ 1.44 * log2(n)
+
+**AVL Rotation Cases:**
+```
+LL Case (Right Rotation):     RR Case (Left Rotation):
+      y            x              x            y
+     / \          / \            / \          / \
+    x  T3  -->  T1   y          T1  y  -->   x  T3
+   / \              / \            / \      / \
+  T1 T2            T2 T3          T2 T3    T1 T2
+
+LR Case:                      RL Case:
+Left rotate x, then           Right rotate y, then
+right rotate y                left rotate x
+```
 
 ## 🧪 Testing
 
@@ -178,43 +243,48 @@ Each data structure has a comprehensive test suite covering:
 
 - ✅ Constructor variations (default, copy, move, initializer list)
 - ✅ Basic operations (insert, delete, access)
-- ✅ Edge cases (empty container, single element, full capacity)
+- ✅ Edge cases (empty container, single element)
 - ✅ Exception handling (out of range, empty container)
 - ✅ Memory management (no leaks, proper cleanup)
 - ✅ Large datasets (stress testing with 1000-10000 elements)
 - ✅ Different data types (int, double, custom types)
+- ✅ AVL-specific: Rotation cases, balance verification
 
 ### Test Results
 
-All tests passing:
 ```
+Linear Data Structures:
 ✓ DynamicArray: 21/21 tests passed
-✓ Stack: 22/22 tests passed
+✓ Stack: 23/23 tests passed
 ✓ LinkedList: 33/33 tests passed
 ✓ Queue: 26/26 tests passed
 ✓ Deque: 35/35 tests passed
+
+Tree Data Structures:
+✓ BinarySearchTree: 40/40 tests passed
+✓ AVLTree: 45/45 tests passed
 ```
 
 ## 🔮 Future Plans
 
 ### Upcoming Data Structures
-- [ ] **Tree**: Binary Search Tree (BST)
-- [ ] **AVL Tree**: Self-balancing BST
-- [ ] **Heap**: Priority Queue implementation
+- [ ] **Heap**: Binary heap / Priority Queue
 - [ ] **Hash Table**: Hash map with collision handling
+- [ ] **Red-Black Tree**: Alternative self-balancing BST
 - [ ] **Graph**: Adjacency list/matrix representations
+- [ ] **Trie**: Prefix tree for string operations
 
 ### Planned Algorithms
 - [ ] **Sorting**: QuickSort, MergeSort, HeapSort
 - [ ] **Searching**: Binary Search, Graph traversals (DFS/BFS)
 - [ ] **String**: KMP, Rabin-Karp pattern matching
 - [ ] **Graph**: Dijkstra, Kruskal, Topological Sort
-- [ ] **Practical**: LRU Cache, Expression Evaluator
+- [ ] **Dynamic Programming**: Common DP problems
 
 ## 💻 Development Environment
 
-This project was developed on:
-- **Device**: Samsung Galaxy Z Fold7
+This project is developed on:
+- **Device**: Samsung Galaxy Z Fold
 - **OS**: Android (Termux)
 - **Editor**: Neovim with LSP (clangd)
 - **Compiler**: Clang/LLVM (ARM64)
@@ -222,7 +292,7 @@ This project was developed on:
 Special setup for mobile development:
 - Custom Neovim configuration with C++ LSP
 - Integrated terminal for build/test workflow
-- CMake-based build system optimized for Termux
+- CMake-based modular build system
 
 ## 📝 Code Style
 
@@ -230,7 +300,7 @@ Special setup for mobile development:
 - **Comments**: Doxygen-style documentation for all public APIs
 - **Headers**: Include guards with project prefix
 - **Formatting**: Consistent indentation and spacing
-- **Namespace**: `mylib::linear` for organization
+- **Namespace**: `mylib::linear`, `mylib::tree` for organization
 
 ## 🤝 Contributing
 
@@ -240,25 +310,35 @@ This is a personal learning project, but suggestions and feedback are welcome!
 
 MIT License - See LICENSE file for details
 
-Copyright (c) 2025 Your Name
+Copyright (c) 2025 Jinhyeok
 
 ## 🙏 Acknowledgments
 
 - Built with modern C++ best practices
 - Inspired by STL design principles
-- Developed entirely on mobile (Galaxy Z Fold7 + Termux + Neovim)
+- Developed entirely on mobile (Galaxy Z Fold + Termux + Neovim)
 
 ---
 
 **Note**: This is an educational project focused on understanding data structures from first principles. For production use, prefer well-tested libraries like STL.
 
-## 📚 Learning Resources
+## 📚 Learning Path
 
 If you're following along to learn:
-1. Start with DynamicArray to understand memory management
-2. Move to LinkedList to learn pointer manipulation
-3. Study Stack/Queue to see container adapters
-4. Implement Deque to combine concepts
-5. Test thoroughly to verify correctness
+
+1. **Linear Structures**
+   - Start with DynamicArray to understand memory management
+   - Move to LinkedList to learn pointer manipulation
+   - Study Stack/Queue to see container adapters
+
+2. **Tree Structures**
+   - Implement BST to understand tree concepts and recursion
+   - Add AVL to learn self-balancing and rotations
+   - Compare BST vs AVL performance with skewed data
+
+3. **Testing**
+   - Write tests for each operation
+   - Cover edge cases thoroughly
+   - Verify with stress tests
 
 **Happy coding!** 🚀
