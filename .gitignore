@@ -34,7 +34,6 @@ build/test_linked_list
 build/test_queue
 build/main
 main
-.cache/*
 
 # CMake
 # =====
@@ -59,6 +58,7 @@ Release/
 x64/
 x86/
 .vs/
+./cache/
 
 # IDEs and Editors
 # ================
