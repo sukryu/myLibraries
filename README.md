@@ -17,42 +17,32 @@ This project is a personal journey to deeply understand data structures and algo
 
 ```
 myLibraries/
-├── CMakeLists.txt
-├── include/
-│   ├── linear/
+├── include/                    # Header files
+│   ├── linear/                # Linear data structures
 │   │   ├── dynamic_array.hpp
 │   │   ├── stack.hpp
 │   │   ├── linked_list.hpp
 │   │   ├── queue.hpp
 │   │   └── deque.hpp
-│   └── tree/
-│       ├── binary_search_tree.hpp
-│       └── avl_tree.hpp
-├── src/
+│   ├── tree/                  # Tree data structures
+│   │   ├── binary_search_tree.hpp
+│   │   ├── avl_tree.hpp
+│   │   └── heap.hpp
+│   ├── hash/                  # Hash-based structures
+│   │   └── hash_table.hpp
+│   └── graph/                 # Graph structures
+│       └── graph.hpp
+├── src/                       # Implementation files
 │   ├── linear/
-│   │   ├── CMakeLists.txt
-│   │   ├── dynamic_array.cpp
-│   │   ├── stack.cpp
-│   │   ├── linked_list.cpp
-│   │   ├── queue.cpp
-│   │   └── deque.cpp
-│   └── tree/
-│       ├── CMakeLists.txt
-│       ├── binary_search_tree.cpp
-│       └── avl_tree.cpp
-├── tests/
-│   ├── CMakeLists.txt
+│   ├── tree/
+│   ├── hash/
+│   └── graph/
+├── tests/                     # Test suites
 │   ├── linear/
-│   │   ├── CMakeLists.txt
-│   │   ├── test_dynamic_array.cpp
-│   │   ├── test_stack.cpp
-│   │   ├── test_linked_list.cpp
-│   │   ├── test_queue.cpp
-│   │   └── test_deque.cpp
-│   └── tree/
-│       ├── CMakeLists.txt
-│       ├── test_binary_search_tree.cpp
-│       └── test_avl_tree.cpp
+│   ├── tree/
+│   ├── hash/
+│   └── graph/
+├── CMakeLists.txt
 └── README.md
 ```
 
@@ -61,38 +51,58 @@ myLibraries/
 ### Linear Data Structures
 
 | Data Structure | Description | Key Operations | Time Complexity |
-|---------------|-------------|----------------|-----------------|
-| **DynamicArray** | Auto-resizing array with capacity management | push_back, pop_back, operator[] | O(1) amortized |
-| **Stack** | LIFO container using DynamicArray | push, pop, top | O(1) |
-| **LinkedList** | Doubly linked list with bidirectional traversal | push_front/back, insert, erase | O(1) ends, O(n) middle |
-| **Queue** | FIFO container using LinkedList | push, pop, front | O(1) |
-| **Deque** | Double-ended queue using LinkedList | push_front/back, pop_front/back | O(1) |
+|----------------|-------------|----------------|-----------------|
+| **DynamicArray** | Auto-resizing array with capacity management | `push_back`, `pop_back`, `operator[]` | O(1) amortized |
+| **Stack** | LIFO container using DynamicArray | `push`, `pop`, `top` | O(1) |
+| **LinkedList** | Doubly linked list with bidirectional traversal | `push_front/back`, `insert`, `erase` | O(1) ends, O(n) middle |
+| **Queue** | FIFO container using LinkedList | `push`, `pop`, `front` | O(1) |
+| **Deque** | Double-ended queue using LinkedList | `push_front/back`, `pop_front/back` | O(1) |
 
 ### Tree Data Structures
 
 | Data Structure | Description | Key Operations | Time Complexity |
-|---------------|-------------|----------------|-----------------|
-| **BinarySearchTree** | Ordered binary tree | insert, remove, find, traversals | O(log n) avg, O(n) worst |
-| **AVLTree** | Self-balancing BST | insert, remove, find, rotations | O(log n) guaranteed |
+|----------------|-------------|----------------|-----------------|
+| **BinarySearchTree** | Basic BST with recursive operations | `insert`, `remove`, `find`, traversals | O(log n) avg, O(n) worst |
+| **AVLTree** | Self-balancing BST with rotations | `insert`, `remove`, `find` | O(log n) guaranteed |
+| **Heap** | Binary heap with MaxHeap/MinHeap support | `push`, `pop`, `top`, `heapify` | O(log n) push/pop, O(n) heapify |
 
-### Features
+#### AVL Tree Rotations
+```
+Right Rotation (LL):        Left Rotation (RR):
+    y                           x
+   / \                         / \
+  x   C  →  x                 A   y
+ / \       / \                   / \
+A   B     A   y                 B   C
+              / \
+             B   C
+```
 
-✨ **Modern C++17**
-- Move semantics for efficiency
-- Template-based generic programming
-- RAII and smart memory management
-- Exception safety
+### Hash Data Structures
 
-📝 **Comprehensive Documentation**
-- Doxygen-style comments
-- Clear function descriptions
-- Usage examples in tests
+| Data Structure | Description | Key Operations | Time Complexity |
+|----------------|-------------|----------------|-----------------|
+| **HashTable** | Separate chaining hash map | `insert`, `erase`, `find`, `operator[]` | O(1) average |
 
-🧪 **Thorough Testing**
-- Unit tests for all functions
-- Edge case coverage
-- Stress tests with large datasets
-- Memory leak verification
+Features:
+- Automatic rehashing when load factor exceeds threshold
+- Prime number bucket sizing for better distribution
+- Support for custom hash functions and key comparators
+
+### Graph Data Structures
+
+| Data Structure | Description | Key Operations | Time Complexity |
+|----------------|-------------|----------------|-----------------|
+| **Graph** | Adjacency list representation | `add_vertex/edge`, `bfs`, `dfs`, `dijkstra` | Varies by operation |
+
+Features:
+- Directed and undirected graphs
+- Weighted edges
+- BFS/DFS traversals
+- Shortest path (BFS for unweighted, Dijkstra for weighted)
+- Cycle detection
+- Topological sort (DAG)
+- Connected components
 
 ## 🚀 Getting Started
 
@@ -100,12 +110,6 @@ myLibraries/
 
 - C++17 compatible compiler (GCC, Clang, MSVC)
 - CMake 3.10 or higher
-- Git
-
-For Termux (Android):
-```bash
-pkg install clang cmake git
-```
 
 ### Building the Project
 
@@ -115,230 +119,173 @@ git clone <your-repo-url>
 cd myLibraries
 
 # Create build directory
-mkdir -p build
-cd build
+mkdir -p build && cd build
 
 # Configure and build
 cmake ..
 cmake --build .
 
 # Run all tests
-ctest
+ctest --output-on-failure
 
 # Or run individual tests
 ./tests/linear/test_dynamic_array
-./tests/linear/test_stack
-./tests/linear/test_linked_list
-./tests/linear/test_queue
-./tests/linear/test_deque
-./tests/tree/test_binary_search_tree
 ./tests/tree/test_avl_tree
+./tests/hash/test_hash_table
+./tests/graph/test_graph
 ```
 
-### Quick Example
+## 📊 Usage Examples
 
+### DynamicArray
+```cpp
+#include "linear/dynamic_array.hpp"
+using namespace mylib::linear;
+
+DynamicArray<int> arr = {1, 2, 3, 4, 5};
+arr.push_back(6);
+arr.pop_back();
+std::cout << arr[0] << std::endl;  // 1
+```
+
+### Stack & Queue
 ```cpp
 #include "linear/stack.hpp"
 #include "linear/queue.hpp"
-#include "tree/avl_tree.hpp"
-#include <iostream>
-#include <vector>
-
 using namespace mylib::linear;
+
+// Stack (LIFO)
+Stack<int> stack;
+stack.push(1);
+stack.push(2);
+std::cout << stack.top() << std::endl;  // 2
+
+// Queue (FIFO)
+Queue<int> queue;
+queue.push(1);
+queue.push(2);
+std::cout << queue.front() << std::endl;  // 1
+```
+
+### Binary Search Tree & AVL Tree
+```cpp
+#include "tree/avl_tree.hpp"
 using namespace mylib::tree;
 
-int main() {
-    // Stack example (LIFO)
-    Stack<int> stack;
-    stack.push(1);
-    stack.push(2);
-    stack.push(3);
-    std::cout << stack.top() << std::endl;  // 3
-    
-    // Queue example (FIFO)
-    Queue<int> queue;
-    queue.push(1);
-    queue.push(2);
-    queue.push(3);
-    std::cout << queue.front() << std::endl;  // 1
-    
-    // AVL Tree example (self-balancing BST)
-    AVLTree<int> avl;
-    for (int i = 1; i <= 1000; ++i) {
-        avl.insert(i);  // Stays balanced!
-    }
-    std::cout << "Size: " << avl.size() << std::endl;    // 1000
-    std::cout << "Height: " << avl.height() << std::endl; // ~10 (not 1000!)
-    
-    // Inorder traversal (sorted output)
-    std::vector<int> sorted;
-    avl.inorder([&sorted](const int& val) {
-        sorted.push_back(val);
-    });
-    
-    return 0;
+AVLTree<int> tree;
+tree.insert(10);
+tree.insert(5);
+tree.insert(15);
+
+// Inorder traversal (sorted)
+tree.inorder([](int val) { std::cout << val << " "; });
+// Output: 5 10 15
+```
+
+### Heap (Priority Queue)
+```cpp
+#include "tree/heap.hpp"
+using namespace mylib::tree;
+
+MaxHeap<int> maxHeap = {3, 1, 4, 1, 5, 9};
+std::cout << maxHeap.top() << std::endl;  // 9
+
+MinHeap<int> minHeap = {3, 1, 4, 1, 5, 9};
+std::cout << minHeap.top() << std::endl;  // 1
+```
+
+### Hash Table
+```cpp
+#include "hash/hash_table.hpp"
+using namespace mylib::hash;
+
+HashTable<std::string, int> table;
+table["apple"] = 5;
+table["banana"] = 3;
+
+if (table.contains("apple")) {
+    std::cout << table["apple"] << std::endl;  // 5
 }
 ```
 
-## 📊 Implementation Details
+### Graph
+```cpp
+#include "graph/graph.hpp"
+using namespace mylib::graph;
 
-### Linear Data Structures
+// Directed weighted graph
+Graph<std::string, double> graph(true);
+graph.add_edge("Seoul", "Busan", 325.0);
+graph.add_edge("Seoul", "Daegu", 237.0);
+graph.add_edge("Daegu", "Busan", 88.0);
 
-#### DynamicArray
-- **Internal Storage**: Raw array with manual memory management
-- **Growth Strategy**: 2x capacity when full
-- **Memory**: Contiguous allocation for cache efficiency
+// Shortest path using Dijkstra
+auto [path, distance] = graph.dijkstra("Seoul", "Busan");
+// path: Seoul -> Daegu -> Busan
+// distance: 325.0
 
-#### Stack
-- **Container Adapter**: Uses DynamicArray internally
-- **Operations**: All O(1) time complexity
-- **Use Cases**: Expression evaluation, undo/redo, backtracking
+// BFS traversal
+graph.bfs("Seoul", [](const std::string& city) {
+    std::cout << city << " ";
+});
 
-#### LinkedList
-- **Structure**: Doubly linked nodes with prev/next pointers
-- **Optimization**: Bidirectional traversal from nearest end
-- **Memory**: Dynamic allocation per node
-
-#### Queue
-- **Container Adapter**: Uses LinkedList internally
-- **Operations**: O(1) enqueue and dequeue
-- **Use Cases**: BFS, task scheduling, buffering
-
-#### Deque
-- **Container Adapter**: Uses LinkedList internally
-- **Flexibility**: Combines Stack and Queue operations
-- **Use Cases**: Sliding window, palindrome checking
-
-### Tree Data Structures
-
-#### BinarySearchTree
-- **Property**: Left < Root < Right
-- **Traversals**: Inorder, Preorder, Postorder, Level-order
-- **Operations**: Insert, Remove (3 cases), Find, Min/Max
-- **Weakness**: Can become skewed (O(n) worst case)
-
-#### AVLTree
-- **Balance Factor**: |height(left) - height(right)| ≤ 1
-- **Rotations**: LL, RR, LR, RL
-- **Guarantee**: O(log n) for all operations
-- **Height**: Always ≤ 1.44 * log2(n)
-
-**AVL Rotation Cases:**
-```
-LL Case (Right Rotation):     RR Case (Left Rotation):
-      y            x              x            y
-     / \          / \            / \          / \
-    x  T3  -->  T1   y          T1  y  -->   x  T3
-   / \              / \            / \      / \
-  T1 T2            T2 T3          T2 T3    T1 T2
-
-LR Case:                      RL Case:
-Left rotate x, then           Right rotate y, then
-right rotate y                left rotate x
+// Topological sort (for DAGs)
+Graph<std::string> courses(true);
+courses.add_edge("Math101", "Math201");
+courses.add_edge("Math201", "Math301");
+auto order = courses.topological_sort();
 ```
 
-## 🧪 Testing
+## 🧪 Test Coverage
 
-Each data structure has a comprehensive test suite covering:
+| Component | Tests | Status |
+|-----------|-------|--------|
+| DynamicArray | 21 | ✅ |
+| Stack | 23 | ✅ |
+| LinkedList | 33 | ✅ |
+| Queue | 26 | ✅ |
+| Deque | 35 | ✅ |
+| BinarySearchTree | 40 | ✅ |
+| AVLTree | 45 | ✅ |
+| Heap | 42 | ✅ |
+| HashTable | 47 | ✅ |
+| Graph | 55 | ✅ |
+| **Total** | **367** | ✅ |
 
-- ✅ Constructor variations (default, copy, move, initializer list)
-- ✅ Basic operations (insert, delete, access)
-- ✅ Edge cases (empty container, single element)
-- ✅ Exception handling (out of range, empty container)
-- ✅ Memory management (no leaks, proper cleanup)
-- ✅ Large datasets (stress testing with 1000-10000 elements)
-- ✅ Different data types (int, double, custom types)
-- ✅ AVL-specific: Rotation cases, balance verification
+## 🔮 Roadmap
 
-### Test Results
-
-```
-Linear Data Structures:
-✓ DynamicArray: 21/21 tests passed
-✓ Stack: 23/23 tests passed
-✓ LinkedList: 33/33 tests passed
-✓ Queue: 26/26 tests passed
-✓ Deque: 35/35 tests passed
-
-Tree Data Structures:
-✓ BinarySearchTree: 40/40 tests passed
-✓ AVLTree: 45/45 tests passed
-```
-
-## 🔮 Future Plans
-
-### Upcoming Data Structures
-- [ ] **Heap**: Binary heap / Priority Queue
-- [ ] **Hash Table**: Hash map with collision handling
-- [ ] **Red-Black Tree**: Alternative self-balancing BST
-- [ ] **Graph**: Adjacency list/matrix representations
-- [ ] **Trie**: Prefix tree for string operations
-
-### Planned Algorithms
+### Algorithms (Coming Soon)
 - [ ] **Sorting**: QuickSort, MergeSort, HeapSort
-- [ ] **Searching**: Binary Search, Graph traversals (DFS/BFS)
+- [ ] **Graph**: Bellman-Ford, Floyd-Warshall, Kruskal, Prim
 - [ ] **String**: KMP, Rabin-Karp pattern matching
-- [ ] **Graph**: Dijkstra, Kruskal, Topological Sort
-- [ ] **Dynamic Programming**: Common DP problems
+
+### Additional Data Structures
+- [ ] Red-Black Tree
+- [ ] Trie (Prefix Tree)
+- [ ] Disjoint Set (Union-Find)
+- [ ] B-Tree
 
 ## 💻 Development Environment
 
-This project is developed on:
+This project was developed on:
 - **Device**: Samsung Galaxy Z Fold
 - **OS**: Android (Termux)
 - **Editor**: Neovim with LSP (clangd)
-- **Compiler**: Clang/LLVM (ARM64)
-
-Special setup for mobile development:
-- Custom Neovim configuration with C++ LSP
-- Integrated terminal for build/test workflow
-- CMake-based modular build system
+- **Build**: CMake + Clang/LLVM
 
 ## 📝 Code Style
 
-- **Naming**: snake_case for functions/variables, PascalCase for classes
-- **Comments**: Doxygen-style documentation for all public APIs
-- **Headers**: Include guards with project prefix
-- **Formatting**: Consistent indentation and spacing
-- **Namespace**: `mylib::linear`, `mylib::tree` for organization
-
-## 🤝 Contributing
-
-This is a personal learning project, but suggestions and feedback are welcome!
+- **Naming**: `snake_case` for functions/variables, `PascalCase` for classes
+- **Comments**: Doxygen-style documentation
+- **Headers**: Include guards with `MYLIB_` prefix
+- **Namespace**: `mylib::linear`, `mylib::tree`, `mylib::hash`, `mylib::graph`
 
 ## 📄 License
 
-MIT License - See LICENSE file for details
+MIT License - See LICENSE file for details.
 
 Copyright (c) 2025 Jinhyeok
 
-## 🙏 Acknowledgments
-
-- Built with modern C++ best practices
-- Inspired by STL design principles
-- Developed entirely on mobile (Galaxy Z Fold + Termux + Neovim)
-
 ---
-
-**Note**: This is an educational project focused on understanding data structures from first principles. For production use, prefer well-tested libraries like STL.
-
-## 📚 Learning Path
-
-If you're following along to learn:
-
-1. **Linear Structures**
-   - Start with DynamicArray to understand memory management
-   - Move to LinkedList to learn pointer manipulation
-   - Study Stack/Queue to see container adapters
-
-2. **Tree Structures**
-   - Implement BST to understand tree concepts and recursion
-   - Add AVL to learn self-balancing and rotations
-   - Compare BST vs AVL performance with skewed data
-
-3. **Testing**
-   - Write tests for each operation
-   - Cover edge cases thoroughly
-   - Verify with stress tests
 
 **Happy coding!** 🚀
