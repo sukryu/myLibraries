@@ -15,6 +15,7 @@ add_library(mylib STATIC
     src/linear/stack.cpp
     src/linear/linked_list.cpp
     src/linear/queue.cpp
+    src/linear/deque.cpp
 )
 
 # Test executor
@@ -26,11 +27,14 @@ add_executable(test_linked_list
     tests/test_linked_list.cpp)
 add_executable(test_queue
     tests/test_queue.cpp)
+add_executable(test_deque
+    tests/test_deque.cpp)
 
 target_link_libraries(test_dynamic_array mylib)
 target_link_libraries(test_stack mylib)
 target_link_libraries(test_linked_list mylib)
 target_link_libraries(test_queue mylib)
+target_link_libraries(test_deque mylib)
 
 # Enable tests
 enable_testing()
@@ -38,6 +42,7 @@ add_test(NAME DynamicArrayTest COMMAND test_dynamic_array)
 add_test(NAME StackTest COMMAND test_stack)
 add_test(NAME LinkedListTest COMMAND test_linked_list)
 add_test(NAME QueueTest COMMAND test_queue)
+add_test(NAME DequeTest COMMAND test_deque)
 # 메인 실행 파일
 #add_executable(main src/main.cpp)
 
