@@ -34,7 +34,8 @@ myLibraries/
 │   │   └── graph.hpp
 │   └── algorithm/             # Algorithms (header-only)
 │       ├── sorting.hpp
-│       └── graph_algorithms.hpp
+│       ├── graph_algorithms.hpp
+│       └── string_algorithms.hpp
 ├── src/                       # Implementation files
 │   ├── tree/
 │   ├── hash/
@@ -175,6 +176,56 @@ bool same = uf.connected(1, 2);  // true
 std::cout << "Sets: " << uf.set_count() << std::endl;  // 3
 ```
 
+### String Algorithms
+
+| Algorithm | Time Complexity | Space | Description |
+|-----------|----------------|-------|-------------|
+| **KMP** | O(n + m) | O(m) | Fast single pattern matching with LPS array |
+| **Rabin-Karp** | O(n + m) avg | O(1) | Hash-based matching, efficient for multiple patterns |
+
+#### String Utilities
+| Function | Description |
+|----------|-------------|
+| `starts_with()`, `ends_with()` | Prefix/suffix checking |
+| `longest_common_prefix/suffix()` | Find common parts |
+| `is_palindrome()`, `longest_palindrome()` | Palindrome detection |
+| `edit_distance()` | Levenshtein distance |
+| `lcs()`, `lcs_length()` | Longest common subsequence |
+
+```cpp
+#include "algorithm/string_algorithms.hpp"
+using namespace mylib::algorithm;
+
+// KMP: Single pattern matching
+auto result = KMP::search("hello world", "world");
+if (result.found()) {
+    std::cout << "Found at: " << result.first().value() << std::endl;
+}
+
+// Find all occurrences
+auto matches = KMP::search("abababab", "ab");
+std::cout << "Count: " << matches.count() << std::endl;  // 4
+
+// Reusable matcher
+KMP matcher("pattern");
+auto r1 = matcher.match("text with pattern");
+auto r2 = matcher.match("another pattern here");
+
+// Replace and split
+auto replaced = KMP::replace_all("hello world", "world", "universe");
+auto parts = KMP::split("a,b,c,d", ",");
+
+// Rabin-Karp: Multiple patterns at once
+std::vector<std::string> patterns = {"cat", "dog", "bird"};
+auto multi = RabinKarp::search_multiple("I have a cat and a dog", patterns);
+
+// String utilities
+bool is_pal = is_palindrome("racecar");           // true
+auto lcp = longest_common_prefix("hello", "help"); // "hel"
+auto dist = edit_distance("kitten", "sitting");    // 3
+auto common = lcs("ABCDGH", "AEDFHR");             // "ADH"
+```
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -205,6 +256,7 @@ ctest --output-on-failure
 ./tests/graph/test_graph
 ./tests/algorithm/test_sorting
 ./tests/algorithm/test_graph_algorithms
+./tests/algorithm/test_string_algorithms
 ```
 
 ## 📊 Usage Examples
@@ -292,14 +344,12 @@ auto order = graph.topological_sort();
 |-----------|-------|--------|
 | Sorting (QuickSort, MergeSort, HeapSort) | 52 | ✅ |
 | Graph (Bellman-Ford, Floyd-Warshall, Kruskal, Prim) | 47 | ✅ |
-| **Subtotal** | **99** | ✅ |
+| String (KMP, Rabin-Karp) | 47 | ✅ |
+| **Subtotal** | **146** | ✅ |
 
-### Total: **328+ Tests** ✅
+### Total: **375+ Tests** ✅
 
 ## 🔮 Roadmap
-
-### Algorithms (Coming Soon)
-- [ ] **String**: KMP, Rabin-Karp pattern matching
 
 ### Additional Data Structures
 - [ ] Red-Black Tree
