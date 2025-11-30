@@ -30,18 +30,20 @@ myLibraries/
 │   │   └── heap.hpp
 │   ├── hash/                  # Hash-based structures
 │   │   └── hash_table.hpp
-│   └── graph/                 # Graph structures
-│       └── graph.hpp
+│   ├── graph/                 # Graph structures
+│   │   └── graph.hpp
+│   └── algorithm/             # Algorithms (header-only)
+│       ├── sorting.hpp
+│       └── graph_algorithms.hpp
 ├── src/                       # Implementation files
-│   ├── linear/
 │   ├── tree/
 │   ├── hash/
 │   └── graph/
 ├── tests/                     # Test suites
-│   ├── linear/
 │   ├── tree/
 │   ├── hash/
-│   └── graph/
+│   ├── graph/
+│   └── algorithm/
 ├── CMakeLists.txt
 └── README.md
 ```
@@ -66,28 +68,11 @@ myLibraries/
 | **AVLTree** | Self-balancing BST with rotations | `insert`, `remove`, `find` | O(log n) guaranteed |
 | **Heap** | Binary heap with MaxHeap/MinHeap support | `push`, `pop`, `top`, `heapify` | O(log n) push/pop, O(n) heapify |
 
-#### AVL Tree Rotations
-```
-Right Rotation (LL):        Left Rotation (RR):
-    y                           x
-   / \                         / \
-  x   C  →  x                 A   y
- / \       / \                   / \
-A   B     A   y                 B   C
-              / \
-             B   C
-```
-
 ### Hash Data Structures
 
 | Data Structure | Description | Key Operations | Time Complexity |
 |----------------|-------------|----------------|-----------------|
 | **HashTable** | Separate chaining hash map | `insert`, `erase`, `find`, `operator[]` | O(1) average |
-
-Features:
-- Automatic rehashing when load factor exceeds threshold
-- Prime number bucket sizing for better distribution
-- Support for custom hash functions and key comparators
 
 ### Graph Data Structures
 
@@ -95,14 +80,100 @@ Features:
 |----------------|-------------|----------------|-----------------|
 | **Graph** | Adjacency list representation | `add_vertex/edge`, `bfs`, `dfs`, `dijkstra` | Varies by operation |
 
-Features:
-- Directed and undirected graphs
-- Weighted edges
-- BFS/DFS traversals
-- Shortest path (BFS for unweighted, Dijkstra for weighted)
-- Cycle detection
-- Topological sort (DAG)
-- Connected components
+## ✅ Implemented Algorithms
+
+### Sorting Algorithms
+
+| Algorithm | Time Complexity | Space | Stable | Description |
+|-----------|----------------|-------|--------|-------------|
+| **QuickSort** | O(n log n) avg | O(log n) | No | Median-of-three pivot, tail recursion optimized |
+| **MergeSort** | O(n log n) | O(n) | Yes | Divide and conquer, stable sorting |
+| **HeapSort** | O(n log n) | O(1) | No | In-place using binary heap |
+| **InsertionSort** | O(n²) | O(1) | Yes | Efficient for small/nearly sorted arrays |
+
+#### Sorting Features
+- **Fluent Interface**: Chain configuration methods
+- **Key-based Sorting**: Sort by extracted key (like Python's `key=`)
+- **Statistics Collection**: Track comparisons, swaps, time elapsed
+- **Utility Functions**: `sorted()`, `argsort()`, `top_k()`, `bottom_k()`, `shuffle()`
+
+```cpp
+#include "algorithm/sorting.hpp"
+using namespace mylib::algorithm;
+
+// Simple sort
+std::vector<int> v = {5, 2, 8, 1, 9};
+quick_sort(v.begin(), v.end());
+
+// Fluent interface with statistics
+auto stats = Sorter<int>::with_stats()
+    .descending()
+    .quick_sort(v);
+std::cout << "Comparisons: " << stats.comparisons << std::endl;
+
+// Sort by key (like Python)
+std::vector<std::string> words = {"apple", "pie", "banana"};
+Sorter<std::string>::by_key([](const std::string& s) {
+    return s.length();
+}).sort(words);
+// Result: {"pie", "apple", "banana"}
+
+// Get sorted indices (like numpy.argsort)
+auto indices = Sorter<int>::argsort(v);
+
+// Get top k elements
+auto top3 = Sorter<int>::top_k(v, 3);
+```
+
+### Graph Algorithms
+
+| Algorithm | Time Complexity | Space | Description |
+|-----------|----------------|-------|-------------|
+| **Bellman-Ford** | O(V × E) | O(V) | Single-source shortest path, handles negative weights |
+| **Floyd-Warshall** | O(V³) | O(V²) | All-pairs shortest path |
+| **Kruskal** | O(E log E) | O(V) | Minimum Spanning Tree using Union-Find |
+| **Prim** | O(E log V) | O(V) | Minimum Spanning Tree using priority queue |
+
+#### Additional: Union-Find (Disjoint Set)
+- Path compression + Union by rank
+- Near O(1) operations: `find()`, `unite()`, `connected()`
+
+```cpp
+#include "algorithm/graph_algorithms.hpp"
+using namespace mylib::algorithm;
+
+// Bellman-Ford: Single-source shortest path (handles negative weights)
+std::vector<Edge<int, double>> edges = {
+    {0, 1, 4}, {1, 2, -2}, {0, 2, 5}
+};
+auto result = bellman_ford(edges, 0);
+if (!result.has_negative_cycle) {
+    auto dist = result.distance_to(2);   // std::optional<double>
+    auto path = result.path_to(0, 2);    // std::vector<int>
+}
+
+// Floyd-Warshall: All-pairs shortest path
+auto all_pairs = floyd_warshall(edges);
+auto dist = all_pairs.distance(0, 2);
+auto path = all_pairs.path(0, 2);
+
+// Kruskal: Minimum Spanning Tree
+auto mst = kruskal(edges);
+std::cout << "MST weight: " << mst.total_weight << std::endl;
+for (const auto& e : mst.edges) {
+    std::cout << e.from << " - " << e.to << ": " << e.weight << std::endl;
+}
+
+// Prim: Minimum Spanning Tree
+auto mst2 = prim(edges, std::make_optional(0));
+
+// Union-Find
+UnionFind<int> uf = {1, 2, 3, 4, 5};
+uf.unite(1, 2);
+uf.unite(3, 4);
+bool same = uf.connected(1, 2);  // true
+std::cout << "Sets: " << uf.set_count() << std::endl;  // 3
+```
 
 ## 🚀 Getting Started
 
@@ -129,43 +200,14 @@ cmake --build .
 ctest --output-on-failure
 
 # Or run individual tests
-./tests/linear/test_dynamic_array
 ./tests/tree/test_avl_tree
 ./tests/hash/test_hash_table
 ./tests/graph/test_graph
+./tests/algorithm/test_sorting
+./tests/algorithm/test_graph_algorithms
 ```
 
 ## 📊 Usage Examples
-
-### DynamicArray
-```cpp
-#include "linear/dynamic_array.hpp"
-using namespace mylib::linear;
-
-DynamicArray<int> arr = {1, 2, 3, 4, 5};
-arr.push_back(6);
-arr.pop_back();
-std::cout << arr[0] << std::endl;  // 1
-```
-
-### Stack & Queue
-```cpp
-#include "linear/stack.hpp"
-#include "linear/queue.hpp"
-using namespace mylib::linear;
-
-// Stack (LIFO)
-Stack<int> stack;
-stack.push(1);
-stack.push(2);
-std::cout << stack.top() << std::endl;  // 2
-
-// Queue (FIFO)
-Queue<int> queue;
-queue.push(1);
-queue.push(2);
-std::cout << queue.front() << std::endl;  // 1
-```
 
 ### Binary Search Tree & AVL Tree
 ```cpp
@@ -221,8 +263,6 @@ graph.add_edge("Daegu", "Busan", 88.0);
 
 // Shortest path using Dijkstra
 auto [path, distance] = graph.dijkstra("Seoul", "Busan");
-// path: Seoul -> Daegu -> Busan
-// distance: 325.0
 
 // BFS traversal
 graph.bfs("Seoul", [](const std::string& city) {
@@ -230,39 +270,40 @@ graph.bfs("Seoul", [](const std::string& city) {
 });
 
 // Topological sort (for DAGs)
-Graph<std::string> courses(true);
-courses.add_edge("Math101", "Math201");
-courses.add_edge("Math201", "Math301");
-auto order = courses.topological_sort();
+auto order = graph.topological_sort();
 ```
 
 ## 🧪 Test Coverage
 
+### Data Structures
+
 | Component | Tests | Status |
 |-----------|-------|--------|
-| DynamicArray | 21 | ✅ |
-| Stack | 23 | ✅ |
-| LinkedList | 33 | ✅ |
-| Queue | 26 | ✅ |
-| Deque | 35 | ✅ |
 | BinarySearchTree | 40 | ✅ |
 | AVLTree | 45 | ✅ |
 | Heap | 42 | ✅ |
 | HashTable | 47 | ✅ |
 | Graph | 55 | ✅ |
-| **Total** | **367** | ✅ |
+| **Subtotal** | **229** | ✅ |
+
+### Algorithms
+
+| Component | Tests | Status |
+|-----------|-------|--------|
+| Sorting (QuickSort, MergeSort, HeapSort) | 52 | ✅ |
+| Graph (Bellman-Ford, Floyd-Warshall, Kruskal, Prim) | 47 | ✅ |
+| **Subtotal** | **99** | ✅ |
+
+### Total: **328+ Tests** ✅
 
 ## 🔮 Roadmap
 
 ### Algorithms (Coming Soon)
-- [ ] **Sorting**: QuickSort, MergeSort, HeapSort
-- [ ] **Graph**: Bellman-Ford, Floyd-Warshall, Kruskal, Prim
 - [ ] **String**: KMP, Rabin-Karp pattern matching
 
 ### Additional Data Structures
 - [ ] Red-Black Tree
 - [ ] Trie (Prefix Tree)
-- [ ] Disjoint Set (Union-Find)
 - [ ] B-Tree
 
 ## 💻 Development Environment
@@ -278,7 +319,7 @@ This project was developed on:
 - **Naming**: `snake_case` for functions/variables, `PascalCase` for classes
 - **Comments**: Doxygen-style documentation
 - **Headers**: Include guards with `MYLIB_` prefix
-- **Namespace**: `mylib::linear`, `mylib::tree`, `mylib::hash`, `mylib::graph`
+- **Namespace**: `mylib::linear`, `mylib::tree`, `mylib::hash`, `mylib::graph`, `mylib::algorithm`
 
 ## 📄 License
 
