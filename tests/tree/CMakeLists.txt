@@ -10,6 +10,9 @@ foreach(test_name ${TREE_TEST_SOURCES})
     add_test(NAME ${test_name} COMMAND ${test_name})
 endforeach()
 
-# Trie is header-only, no library linking needed
+# Header-only tree structures (no library linking needed)
 add_executable(test_trie test_trie.cpp)
 add_test(NAME test_trie COMMAND test_trie)
+
+add_executable(test_red_black_tree test_red_black_tree.cpp)
+add_test(NAME test_red_black_tree COMMAND test_red_black_tree)
