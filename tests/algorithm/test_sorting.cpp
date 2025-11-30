@@ -271,7 +271,8 @@ void test_sorter_with_stats() {
     
     assert(is_sorted_asc(v));
     assert(stats.comparisons > 0);
-    assert(stats.swaps > 0);
+    // InsertionSort uses copies, not swaps, for small arrays
+    assert(stats.copies > 0 || stats.swaps > 0);
     assert(stats.elapsed_ms >= 0);
     END_TEST
 }

@@ -460,6 +460,8 @@ private:
 
     template <typename RandomIt, typename Compare>
     void quick_sort_impl(RandomIt first, RandomIt last, Compare comp) {
+        if (last - first <= 1) return;  // Empty or single element
+        
         while (last - first > static_cast<std::ptrdiff_t>(m_config.insertion_threshold)) {
             // Median-of-three pivot selection
             RandomIt pivot = median_of_three(first, first + (last - first) / 2, last - 1, comp);
@@ -479,6 +481,8 @@ private:
 
     template <typename RandomIt, typename Compare>
     void quick_sort_impl(RandomIt first, RandomIt last, Compare comp, SortStats& stats) {
+        if (last - first <= 1) return;  // Empty or single element
+        
         while (last - first > static_cast<std::ptrdiff_t>(m_config.insertion_threshold)) {
             RandomIt pivot = median_of_three(first, first + (last - first) / 2, last - 1, comp, stats);
             pivot = partition_impl(first, last, pivot, comp, stats);
@@ -556,6 +560,8 @@ private:
     template <typename RandomIt, typename BufferIt, typename Compare>
     void merge_sort_impl(RandomIt first, RandomIt last, BufferIt buffer, Compare comp) {
         auto size = last - first;
+        if (size <= 1) return;  // Empty or single element
+        
         if (size <= static_cast<std::ptrdiff_t>(m_config.insertion_threshold)) {
             insertion_sort_impl(first, last, comp);
             return;
@@ -570,6 +576,8 @@ private:
     template <typename RandomIt, typename BufferIt, typename Compare>
     void merge_sort_impl(RandomIt first, RandomIt last, BufferIt buffer, Compare comp, SortStats& stats) {
         auto size = last - first;
+        if (size <= 1) return;  // Empty or single element
+        
         if (size <= static_cast<std::ptrdiff_t>(m_config.insertion_threshold)) {
             insertion_sort_impl(first, last, comp, stats);
             return;
@@ -631,6 +639,7 @@ private:
     template <typename RandomIt, typename Compare>
     void heap_sort_impl(RandomIt first, RandomIt last, Compare comp) {
         auto size = last - first;
+        if (size <= 1) return;  // Empty or single element
         
         // Build max heap
         for (auto i = size / 2; i > 0; --i) {
@@ -647,6 +656,7 @@ private:
     template <typename RandomIt, typename Compare>
     void heap_sort_impl(RandomIt first, RandomIt last, Compare comp, SortStats& stats) {
         auto size = last - first;
+        if (size <= 1) return;  // Empty or single element
         
         for (auto i = size / 2; i > 0; --i) {
             sift_down(first, i - 1, size, comp, stats);
@@ -698,6 +708,8 @@ private:
 
     template <typename RandomIt, typename Compare>
     void insertion_sort_impl(RandomIt first, RandomIt last, Compare comp) {
+        if (last - first <= 1) return;  // Empty or single element
+        
         for (RandomIt i = first + 1; i != last; ++i) {
             auto key = std::move(*i);
             RandomIt j = i;
@@ -711,6 +723,8 @@ private:
 
     template <typename RandomIt, typename Compare>
     void insertion_sort_impl(RandomIt first, RandomIt last, Compare comp, SortStats& stats) {
+        if (last - first <= 1) return;  // Empty or single element
+        
         for (RandomIt i = first + 1; i != last; ++i) {
             auto key = std::move(*i);
             ++stats.copies;
