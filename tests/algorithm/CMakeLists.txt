@@ -1,6 +1,7 @@
 # Algorithm tests (header-only library, no linking needed)
 set(ALGORITHM_TEST_SOURCES
     test_sorting
+    test_graph_algorithms
 )
 
 foreach(test_name ${ALGORITHM_TEST_SOURCES})
