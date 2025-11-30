@@ -9,3 +9,7 @@ foreach(test_name ${TREE_TEST_SOURCES})
     target_link_libraries(${test_name} mylib_tree)
     add_test(NAME ${test_name} COMMAND ${test_name})
 endforeach()
+
+# Trie is header-only, no library linking needed
+add_executable(test_trie test_trie.cpp)
+add_test(NAME test_trie COMMAND test_trie)
