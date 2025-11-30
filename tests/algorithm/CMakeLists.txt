@@ -2,6 +2,7 @@
 set(ALGORITHM_TEST_SOURCES
     test_sorting
     test_graph_algorithms
+    test_string_algorithms
 )
 
 foreach(test_name ${ALGORITHM_TEST_SOURCES})
