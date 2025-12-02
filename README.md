@@ -30,7 +30,9 @@ myLibraries/
 │   │   ├── heap.hpp
 │   │   ├── red_black_tree.hpp
 │   │   ├── trie.hpp
-│   │   └── b_tree.hpp
+│   │   ├── b_tree.hpp
+│   │   ├── segment_tree.hpp
+│   │   └── fenwick_tree.hpp
 │   ├── hash/                  # Hash-based structures
 │   │   └── hash_table.hpp
 │   ├── graph/                 # Graph structures
@@ -74,6 +76,8 @@ myLibraries/
 | **RedBlackTree** | Self-balancing BST with red-black coloring | `insert`, `remove`, `find` | O(log n) guaranteed |
 | **Trie** | Prefix tree for string operations | `insert`, `search`, `starts_with`, `autocomplete` | O(m) where m = key length |
 | **BTree** | Self-balancing multiway search tree | `insert`, `remove`, `search` | O(log n) guaranteed |
+| **SegmentTree** | Range query tree with lazy propagation | `query`, `update`, `range_update` | O(log n) per operation |
+| **FenwickTree** | Binary indexed tree for prefix sums | `query`, `update`, `range_query` | O(log n) per operation |
 
 ### Hash Data Structures
 
@@ -261,6 +265,8 @@ ctest --output-on-failure
 ./tests/tree/test_red_black_tree
 ./tests/tree/test_trie
 ./tests/tree/test_b_tree
+./tests/tree/test_segment_tree
+./tests/tree/test_fenwick_tree
 ./tests/hash/test_hash_table
 ./tests/graph/test_graph
 ./tests/algorithm/test_sorting
@@ -361,6 +367,76 @@ tree.inorder([](int val) {
 });
 ```
 
+### Segment Tree
+```cpp
+#include "tree/segment_tree.hpp"
+using namespace mylib::tree;
+
+// Range sum queries
+std::vector<int> arr = {1, 3, 5, 7, 9, 11};
+auto tree = create_sum_segment_tree(arr, true);  // with lazy propagation
+
+// Query sum of range [1, 4]
+int sum = tree.range_query(1, 4);  // 3+5+7+9 = 24
+
+// Point update: set arr[2] = 10
+tree.update(2, 10);
+
+// Range update: add 5 to arr[1..3]
+tree.range_update(1, 3, 5);
+
+// Range minimum queries
+auto min_tree = create_min_segment_tree(arr);
+int min_val = min_tree.range_query(0, 5);
+
+// Custom merge operation (e.g., GCD)
+auto gcd_tree = create_gcd_segment_tree(arr);
+int gcd = gcd_tree.range_query(0, 3);
+
+// Specialized classes
+RangeSumSegmentTree<int> sum_tree(arr);
+RangeMinSegmentTree<int> min_tree(arr);
+RangeMaxSegmentTree<int> max_tree(arr);
+```
+
+### Fenwick Tree (Binary Indexed Tree)
+```cpp
+#include "tree/fenwick_tree.hpp"
+using namespace mylib::tree;
+
+// Basic Fenwick Tree for prefix sums
+std::vector<int> arr = {3, 2, -1, 6, 5, 4};
+FenwickTree<int> tree(arr);
+
+// Prefix sum [0, 3]
+int sum = tree.prefix_sum(3);  // 3+2+(-1)+6 = 10
+
+// Range sum [2, 5]
+int range_sum = tree.range_sum(2, 5);  // -1+6+5+4 = 14
+
+// Update: add 10 to arr[3]
+tree.update(3, 10);
+
+// Set value: arr[2] = 100
+tree.set(2, 100);
+
+// Get current value
+int val = tree.get(3);
+
+// Binary search: find smallest index with prefix_sum >= target
+std::size_t idx = tree.lower_bound(20);
+
+// 2D Fenwick Tree for 2D range sums
+FenwickTree2D<int> tree2d(5, 5);
+tree2d.update(2, 3, 10);  // Add 10 to position [2,3]
+
+// Rectangle sum query [1,1] to [3,4]
+int rect_sum = tree2d.range_sum(1, 1, 3, 4);
+
+// Simpler than Segment Tree, faster constants
+// Best for: cumulative frequency, range sum queries
+```
+
 ### Heap (Priority Queue)
 ```cpp
 #include "tree/heap.hpp"
@@ -422,9 +498,11 @@ auto order = graph.topological_sort();
 | RedBlackTree | 45 | ✅ |
 | Trie | 48 | ✅ |
 | BTree | 41 | ✅ |
+| SegmentTree | 39 | ✅ |
+| FenwickTree | 37 | ✅ |
 | HashTable | 47 | ✅ |
 | Graph | 55 | ✅ |
-| **Subtotal** | **363** | ✅ |
+| **Subtotal** | **439** | ✅ |
 
 ### Algorithms
 
@@ -435,7 +513,7 @@ auto order = graph.topological_sort();
 | String (KMP, Rabin-Karp) | 47 | ✅ |
 | **Subtotal** | **146** | ✅ |
 
-### Total: **509 Tests** ✅
+### Total: **585 Tests** ✅
 
 ## 🔮 Roadmap
 
@@ -443,15 +521,20 @@ auto order = graph.topological_sort();
 - [x] Red-Black Tree
 - [x] Trie (Prefix Tree)
 - [x] B-Tree
+- [x] Segment Tree (with lazy propagation)
+- [x] Fenwick Tree / Binary Indexed Tree
 
 ### Future Enhancements
-- [ ] Segment Tree (Range queries)
-- [ ] Fenwick Tree / Binary Indexed Tree
 - [ ] Suffix Array / Suffix Tree
 - [ ] Skip List
 - [ ] Bloom Filter
+- [ ] Persistent Data Structures
+- [ ] Splay Tree
+- [ ] Treap (Randomized BST)
 - [ ] Dynamic Programming examples
 - [ ] More advanced graph algorithms (Tarjan's, Kosaraju's)
+- [ ] Network Flow algorithms
+- [ ] Geometric algorithms (Convex Hull, Line Sweep)
 
 ## 💻 Development Environment
 
