@@ -27,7 +27,10 @@ myLibraries/
 │   ├── tree/                  # Tree data structures
 │   │   ├── binary_search_tree.hpp
 │   │   ├── avl_tree.hpp
-│   │   └── heap.hpp
+│   │   ├── heap.hpp
+│   │   ├── red_black_tree.hpp
+│   │   ├── trie.hpp
+│   │   └── b_tree.hpp
 │   ├── hash/                  # Hash-based structures
 │   │   └── hash_table.hpp
 │   ├── graph/                 # Graph structures
@@ -68,6 +71,9 @@ myLibraries/
 | **BinarySearchTree** | Basic BST with recursive operations | `insert`, `remove`, `find`, traversals | O(log n) avg, O(n) worst |
 | **AVLTree** | Self-balancing BST with rotations | `insert`, `remove`, `find` | O(log n) guaranteed |
 | **Heap** | Binary heap with MaxHeap/MinHeap support | `push`, `pop`, `top`, `heapify` | O(log n) push/pop, O(n) heapify |
+| **RedBlackTree** | Self-balancing BST with red-black coloring | `insert`, `remove`, `find` | O(log n) guaranteed |
+| **Trie** | Prefix tree for string operations | `insert`, `search`, `starts_with`, `autocomplete` | O(m) where m = key length |
+| **BTree** | Self-balancing multiway search tree | `insert`, `remove`, `search` | O(log n) guaranteed |
 
 ### Hash Data Structures
 
@@ -252,6 +258,9 @@ ctest --output-on-failure
 
 # Or run individual tests
 ./tests/tree/test_avl_tree
+./tests/tree/test_red_black_tree
+./tests/tree/test_trie
+./tests/tree/test_b_tree
 ./tests/hash/test_hash_table
 ./tests/graph/test_graph
 ./tests/algorithm/test_sorting
@@ -274,6 +283,82 @@ tree.insert(15);
 // Inorder traversal (sorted)
 tree.inorder([](int val) { std::cout << val << " "; });
 // Output: 5 10 15
+```
+
+### Red-Black Tree
+```cpp
+#include "tree/red_black_tree.hpp"
+using namespace mylib::tree;
+
+RedBlackTree<int> tree;
+tree.insert(10);
+tree.insert(20);
+tree.insert(5);
+
+// Guaranteed O(log n) operations
+assert(tree.verify());  // Check RB properties
+assert(tree.is_root_black());
+
+// Iterator support
+for (auto val : tree) {
+    std::cout << val << " ";
+}
+```
+
+### Trie (Prefix Tree)
+```cpp
+#include "tree/trie.hpp"
+using namespace mylib::tree;
+
+Trie<> trie;
+trie.insert("apple");
+trie.insert("application");
+trie.insert("apply");
+
+// Prefix search
+bool has_prefix = trie.starts_with("app");  // true
+
+// Autocomplete
+auto suggestions = trie.autocomplete("app", 5);
+// Returns: ["apple", "application", "apply"]
+
+// Pattern matching with wildcards
+auto matches = trie.match_pattern("ap?le");  // "apple"
+
+// Word frequency
+trie.insert("apple");  // Insert again
+std::size_t freq = trie.count("apple");  // 2
+```
+
+### B-Tree
+```cpp
+#include "tree/b_tree.hpp"
+using namespace mylib::tree;
+
+// B-Tree with minimum degree 3
+BTree<int> tree(3);
+
+// Insert elements
+for (int i = 1; i <= 20; ++i) {
+    tree.insert(i);
+}
+
+// Search
+if (tree.search(15)) {
+    std::cout << "Found!" << std::endl;
+}
+
+// Remove
+tree.remove(10);
+
+// Tree properties
+std::cout << "Height: " << tree.height() << std::endl;
+assert(tree.verify());  // Verify B-Tree properties
+
+// Inorder traversal (sorted)
+tree.inorder([](int val) {
+    std::cout << val << " ";
+});
 ```
 
 ### Heap (Priority Queue)
@@ -334,9 +419,12 @@ auto order = graph.topological_sort();
 | BinarySearchTree | 40 | ✅ |
 | AVLTree | 45 | ✅ |
 | Heap | 42 | ✅ |
+| RedBlackTree | 45 | ✅ |
+| Trie | 48 | ✅ |
+| BTree | 41 | ✅ |
 | HashTable | 47 | ✅ |
 | Graph | 55 | ✅ |
-| **Subtotal** | **229** | ✅ |
+| **Subtotal** | **363** | ✅ |
 
 ### Algorithms
 
@@ -347,22 +435,32 @@ auto order = graph.topological_sort();
 | String (KMP, Rabin-Karp) | 47 | ✅ |
 | **Subtotal** | **146** | ✅ |
 
-### Total: **375+ Tests** ✅
+### Total: **509 Tests** ✅
 
 ## 🔮 Roadmap
 
-### Additional Data Structures
-- [ ] Red-Black Tree
-- [ ] Trie (Prefix Tree)
-- [ ] B-Tree
+### Completed ✅
+- [x] Red-Black Tree
+- [x] Trie (Prefix Tree)
+- [x] B-Tree
+
+### Future Enhancements
+- [ ] Segment Tree (Range queries)
+- [ ] Fenwick Tree / Binary Indexed Tree
+- [ ] Suffix Array / Suffix Tree
+- [ ] Skip List
+- [ ] Bloom Filter
+- [ ] Dynamic Programming examples
+- [ ] More advanced graph algorithms (Tarjan's, Kosaraju's)
 
 ## 💻 Development Environment
 
 This project was developed on:
-- **Device**: Samsung Galaxy Z Fold
-- **OS**: Android (Termux)
+- **Device**: Samsung Galaxy Z Fold 7
+- **OS**: Android (Termux + Ubuntu 22.04 LTS via proot-distro)
 - **Editor**: Neovim with LSP (clangd)
 - **Build**: CMake + Clang/LLVM
+- **Version Control**: Git with SSH authentication
 
 ## 📝 Code Style
 
@@ -370,6 +468,7 @@ This project was developed on:
 - **Comments**: Doxygen-style documentation
 - **Headers**: Include guards with `MYLIB_` prefix
 - **Namespace**: `mylib::linear`, `mylib::tree`, `mylib::hash`, `mylib::graph`, `mylib::algorithm`
+- **Modern C++**: Using C++17 features (structured bindings, std::optional, etc.)
 
 ## 📄 License
 
