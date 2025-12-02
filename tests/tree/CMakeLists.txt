@@ -19,3 +19,6 @@ add_test(NAME test_red_black_tree COMMAND test_red_black_tree)
 
 add_executable(test_b_tree test_b_tree.cpp)
 add_test(NAME test_b_tree COMMAND test_b_tree)
+
+add_executable(test_segment_tree test_segment_tree.cpp)
+add_test(NAME test_segment_tree COMMAND test_segment_tree)
