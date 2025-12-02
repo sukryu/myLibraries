@@ -25,3 +25,6 @@ add_test(NAME test_segment_tree COMMAND test_segment_tree)
 
 add_executable(test_fenwick_tree test_fenwick_tree.cpp)
 add_test(NAME test_fenwick_tree COMMAND test_fenwick_tree)
+
+add_executable(test_skip_list test_skip_list.cpp)
+add_test(NAME test_skip_list COMMAND test_skip_list)
