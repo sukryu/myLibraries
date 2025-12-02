@@ -22,3 +22,6 @@ add_test(NAME test_b_tree COMMAND test_b_tree)
 
 add_executable(test_segment_tree test_segment_tree.cpp)
 add_test(NAME test_segment_tree COMMAND test_segment_tree)
+
+add_executable(test_fenwick_tree test_fenwick_tree.cpp)
+add_test(NAME test_fenwick_tree COMMAND test_fenwick_tree)
