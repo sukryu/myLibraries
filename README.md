@@ -32,7 +32,8 @@ myLibraries/
 │   │   ├── trie.hpp
 │   │   ├── b_tree.hpp
 │   │   ├── segment_tree.hpp
-│   │   └── fenwick_tree.hpp
+│   │   ├── fenwick_tree.hpp
+│   │   └── skip_list.hpp
 │   ├── hash/                  # Hash-based structures
 │   │   └── hash_table.hpp
 │   ├── graph/                 # Graph structures
@@ -78,6 +79,7 @@ myLibraries/
 | **BTree** | Self-balancing multiway search tree | `insert`, `remove`, `search` | O(log n) guaranteed |
 | **SegmentTree** | Range query tree with lazy propagation | `query`, `update`, `range_update` | O(log n) per operation |
 | **FenwickTree** | Binary indexed tree for prefix sums | `query`, `update`, `range_query` | O(log n) per operation |
+| **SkipList** | Probabilistic balanced search structure | `insert`, `remove`, `find` | O(log n) average |
 
 ### Hash Data Structures
 
@@ -267,6 +269,7 @@ ctest --output-on-failure
 ./tests/tree/test_b_tree
 ./tests/tree/test_segment_tree
 ./tests/tree/test_fenwick_tree
+./tests/tree/test_skip_list
 ./tests/hash/test_hash_table
 ./tests/graph/test_graph
 ./tests/algorithm/test_sorting
@@ -437,6 +440,48 @@ int rect_sum = tree2d.range_sum(1, 1, 3, 4);
 // Best for: cumulative frequency, range sum queries
 ```
 
+### Skip List
+```cpp
+#include "tree/skip_list.hpp"
+using namespace mylib::tree;
+
+// Probabilistic balanced search structure
+SkipList<int> list;
+
+// Insert elements - average O(log n)
+list.insert(5);
+list.insert(3);
+list.insert(7);
+list.insert(1);
+
+// Search - average O(log n)
+if (list.find(5)) {
+    std::cout << "Found 5" << std::endl;
+}
+
+// Remove - average O(log n)
+list.remove(3);
+
+// Sorted iteration
+for (const auto& val : list) {
+    std::cout << val << " ";  // 1 5 7
+}
+
+// Lower and upper bound
+auto lb = list.lower_bound(4);  // Returns 5
+auto ub = list.upper_bound(5);  // Returns 7
+
+// Custom configuration
+SkipList<int> custom_list(16, 0.25);  // max_level=16, p=0.25
+
+// Level distribution (probabilistic properties)
+auto dist = list.level_distribution();
+std::cout << "Level 0: " << dist[0] << " nodes" << std::endl;
+
+// Simpler than Red-Black/AVL trees, no rotations needed!
+// Performance: Similar to balanced trees but easier to implement
+```
+
 ### Heap (Priority Queue)
 ```cpp
 #include "tree/heap.hpp"
@@ -500,9 +545,10 @@ auto order = graph.topological_sort();
 | BTree | 41 | ✅ |
 | SegmentTree | 39 | ✅ |
 | FenwickTree | 37 | ✅ |
+| SkipList | 41 | ✅ |
 | HashTable | 47 | ✅ |
 | Graph | 55 | ✅ |
-| **Subtotal** | **439** | ✅ |
+| **Subtotal** | **480** | ✅ |
 
 ### Algorithms
 
@@ -513,7 +559,7 @@ auto order = graph.topological_sort();
 | String (KMP, Rabin-Karp) | 47 | ✅ |
 | **Subtotal** | **146** | ✅ |
 
-### Total: **585 Tests** ✅
+### Total: **626 Tests** ✅
 
 ## 🔮 Roadmap
 
@@ -523,17 +569,19 @@ auto order = graph.topological_sort();
 - [x] B-Tree
 - [x] Segment Tree (with lazy propagation)
 - [x] Fenwick Tree / Binary Indexed Tree
+- [x] Skip List (probabilistic balanced structure)
 
 ### Future Enhancements
 - [ ] Suffix Array / Suffix Tree
-- [ ] Skip List
 - [ ] Bloom Filter
 - [ ] Persistent Data Structures
 - [ ] Splay Tree
 - [ ] Treap (Randomized BST)
+- [ ] Van Emde Boas Tree
+- [ ] Leftist Heap / Binomial Heap
 - [ ] Dynamic Programming examples
 - [ ] More advanced graph algorithms (Tarjan's, Kosaraju's)
-- [ ] Network Flow algorithms
+- [ ] Network Flow algorithms (Ford-Fulkerson, Dinic's)
 - [ ] Geometric algorithms (Convex Hull, Line Sweep)
 
 ## 💻 Development Environment
