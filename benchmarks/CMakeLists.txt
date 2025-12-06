@@ -30,6 +30,9 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/tree/balanced_tree_benchmark.cpp)
     )
     
     target_link_libraries(benchmark_balanced_tree
+        mylib_tree           # Tree library
+        mylib_hash           # Hash library (if needed)
+        mylib_graph          # Graph library (if needed)
         Threads::Threads
     )
     
@@ -47,6 +50,9 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/algorithm/sorting_benchmark.cpp)
     )
     
     target_link_libraries(benchmark_sorting
+        mylib_tree
+        mylib_hash
+        mylib_graph
         Threads::Threads
     )
     
@@ -60,6 +66,9 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/tree/range_query_benchmark.cpp)
     )
     
     target_link_libraries(benchmark_range_query
+        mylib_tree
+        mylib_hash
+        mylib_graph
         Threads::Threads
     )
     
